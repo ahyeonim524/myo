@@ -3,44 +3,54 @@ Myo.connect('com.myojs.poseDetector');
 Myo.on('status', function(data){
 	$('.events').prepend(JSON.stringify(data, null, 2));
 })
-  	var i = 1;
-//Whenever we get a pose event, we'll update the image sources with the active version of the image
+
+var i = 1;
+
+//Myo.om에서 포즈를 받음
 Myo.on('pose', function(pose){
-   
-        var videoNum = arrLength;
-        
+
+	 	//비디오 개수
+  	var videoNum = arrLength;
+
 		$('img.' + pose).attr('src', 'img/' + pose + '_active.png');
 		$('.mainPose img').attr('src', 'img/' + pose + '_active.png');
-		
+
+		//손가락을 쫙 펴면 동영상 재생
 		if(pose == 'fingers_spread')
 		{
 			document.getElementById("test").play();
 		}
+		//주먹을 쥐면 동영상 일시정지
 		if(pose == 'fist') {
 		   document.getElementById("test").pause();
-	    }	
-	    
+	  }
+	  //wave_in 동작시 이전 비디오 재생
 		if(pose == 'wave_in')
 		{
 			++i;
+			//마지막 비디오의 다음으로 처음 비디오가 선택됨
 			if ( i == (videoNum + 1) ) i = 1 ;
+			//비디오 파일 이름
 			var src = "videos\\video" + i +".mp4";
+
 			$("#movie").attr("src", src);
 
 			$("#test").load()
 			document.getElementById("test").play();
-
-
 		}
+		//wave_out 동작시 다음 비디오 재생
 		if(pose == 'wave_out')
 		{
 			--i;
+			//처음 비디오의 이전으로 마지막 비디오가 선택됨
 			if ( i == 0 ) i = videoNum ;
-		    var src = "videos\\video" + i +".mp4";
+			//비디오 파일 이름
+			var src = "videos\\video" + i +".mp4";
+
 			$("#movie").attr("src", src);
 
 			if($("#test").load())
-			document.getElementById("test").play();		
+			document.getElementById("test").play();
 		}
 })
 
@@ -60,4 +70,3 @@ Myo.on('locked', function(){
 Myo.on('unlocked', function(){
 	$('.mainPose img').attr('src', 'img/unlocked.png');
 });
-
